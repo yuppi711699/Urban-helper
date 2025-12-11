@@ -71,3 +71,4 @@ export class NatalChart {
   updatedAt: Date;
 }
 
+
