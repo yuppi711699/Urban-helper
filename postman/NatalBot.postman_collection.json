@@ -1,0 +1,497 @@
+{
+  "info": {
+    "name": "Natal Chart Bot",
+    "description": "Test collection for the Natal Chart WhatsApp Bot API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "phoneNumber",
+      "value": "whatsapp:+1234567890",
+      "type": "string"
+    },
+    {
+      "key": "webhookVerifyToken",
+      "value": "8f3c7b2e1a4d5f6g9h0j2k5l8m6n4q2r",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Webhook Verification",
+      "item": [
+        {
+          "name": "Verify Webhook (Meta/WhatsApp Business)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp?hub.mode=subscribe&hub.verify_token={{webhookVerifyToken}}&hub.challenge=challenge_token_123",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"],
+              "query": [
+                { "key": "hub.mode", "value": "subscribe" },
+                { "key": "hub.verify_token", "value": "{{webhookVerifyToken}}" },
+                { "key": "hub.challenge", "value": "challenge_token_123" }
+              ]
+            },
+            "description": "Webhook verification endpoint for Meta WhatsApp Business API. Returns the challenge token if verification succeeds."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversation Flow",
+      "item": [
+        {
+          "name": "1. Start Conversation (Hello)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "Hello" },
+                { "key": "ProfileName", "value": "Test User" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Initial message from user. Bot responds with welcome message and asks for name."
+          }
+        },
+        {
+          "name": "2. Send Name",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "John" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "User sends their name. Bot responds asking for birth date."
+          }
+        },
+        {
+          "name": "3. Send Birth Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "25/12/1990" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "User sends birth date in DD/MM/YYYY format. Bot responds asking for birth time."
+          }
+        },
+        {
+          "name": "4. Send Birth Time",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "14:30" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "User sends birth time in HH:MM format. Bot responds asking for birth place."
+          }
+        },
+        {
+          "name": "4b. Send Birth Time (Unknown)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "unknown" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Alternative: User doesn't know birth time. Bot uses 12:00 as default."
+          }
+        },
+        {
+          "name": "5. Send Birth Place",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "London, UK" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "User sends birth place. Bot generates natal chart and returns interpretation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat Commands",
+      "item": [
+        {
+          "name": "Get Menu/Help",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "menu" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Get list of available commands"
+          }
+        },
+        {
+          "name": "Get Chart Summary",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "my chart" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "View natal chart summary"
+          }
+        },
+        {
+          "name": "Get Daily Horoscope",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "today" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Get personalized daily horoscope"
+          }
+        },
+        {
+          "name": "Reset/Start Over",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "reset" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Reset conversation and create new chart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Personalized Advice",
+      "item": [
+        {
+          "name": "Ask About Love",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "What does my chart say about love and relationships?" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Ask for relationship advice based on natal chart"
+          }
+        },
+        {
+          "name": "Ask About Career",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "What career path suits me based on my chart?" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Ask for career guidance based on natal chart"
+          }
+        },
+        {
+          "name": "General Question",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "{{phoneNumber}}" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "I'm feeling stuck in life. What should I do?" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Ask any general life question for personalized advice"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Handling",
+      "item": [
+        {
+          "name": "Invalid Date Format",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "whatsapp:+9999999999" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "not a date" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Test error handling for invalid date input"
+          }
+        },
+        {
+          "name": "Invalid Time Format",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM{{$randomUUID}}" },
+                { "key": "AccountSid", "value": "AC_test_account" },
+                { "key": "From", "value": "whatsapp:+8888888888" },
+                { "key": "To", "value": "whatsapp:+14155238886" },
+                { "key": "Body", "value": "25:99" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp"]
+            },
+            "description": "Test error handling for invalid time input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Status Callback",
+      "item": [
+        {
+          "name": "Message Delivered",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM123456789" },
+                { "key": "MessageStatus", "value": "delivered" },
+                { "key": "To", "value": "{{phoneNumber}}" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp", "status"]
+            },
+            "description": "Twilio status callback when message is delivered"
+          }
+        },
+        {
+          "name": "Message Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "MessageSid", "value": "SM123456789" },
+                { "key": "MessageStatus", "value": "read" },
+                { "key": "To", "value": "{{phoneNumber}}" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhook/whatsapp/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhook", "whatsapp", "status"]
+            },
+            "description": "Twilio status callback when message is read"
+          }
+        }
+      ]
+    }
+  ]
+}
+

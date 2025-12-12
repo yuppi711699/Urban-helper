@@ -19,11 +19,13 @@ export class WhatsappService {
     const accountSid = this.configService.get<string>('TWILIO_ACCOUNT_SID');
     const authToken = this.configService.get<string>('TWILIO_AUTH_TOKEN');
 
-    if (accountSid && authToken) {
+    // Twilio accountSid must start with 'AC' - skip if placeholder/invalid
+    if (accountSid?.startsWith('AC') && authToken && authToken.length > 10) {
       this.twilioClient = new Twilio(accountSid, authToken);
       this.fromNumber = this.configService.get<string>('TWILIO_WHATSAPP_NUMBER', '');
+      this.logger.log('Twilio client initialized');
     } else {
-      this.logger.warn('Twilio credentials not configured');
+      this.logger.warn('Twilio credentials not configured - running in DEV MODE');
     }
   }
 
