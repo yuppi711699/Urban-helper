@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Query,
-  Res,
-  Logger,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Res, Logger, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { WhatsappService } from './whatsapp.service';
@@ -21,6 +12,19 @@ export class WhatsappController {
     private readonly whatsappService: WhatsappService,
     private readonly configService: ConfigService,
   ) {}
+
+  /**
+   * Health check endpoint to verify ngrok connectivity
+   */
+  @Get('health')
+  healthCheck() {
+    this.logger.log('✅ Health check received - ngrok connection verified!');
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      message: 'Natal Bot is connected and ready to receive messages',
+    };
+  }
 
   /**
    * Webhook verification endpoint (for Meta WhatsApp Business API)
@@ -47,11 +51,14 @@ export class WhatsappController {
    * Incoming message webhook (Twilio)
    */
   @Post('whatsapp')
-  async handleIncomingMessage(
-    @Body() body: TwilioWebhookDto,
-    @Res() res: Response,
-  ) {
-    this.logger.log(`Incoming message from: ${body.From}`);
+  async handleIncomingMessage(@Body() body: TwilioWebhookDto, @Res() res: Response) {
+    this.logger.log('═══════════════════════════════════════════════════════');
+    this.logger.log('📩 TWILIO WEBHOOK RECEIVED');
+    this.logger.log(`   From: ${body.From}`);
+    this.logger.log(`   To: ${body.To}`);
+    this.logger.log(`   Message: "${body.Body}"`);
+    this.logger.log(`   MessageSid: ${body.MessageSid}`);
+    this.logger.log('═══════════════════════════════════════════════════════');
 
     try {
       // Process message asynchronously
@@ -74,5 +81,3 @@ export class WhatsappController {
     return res.status(HttpStatus.OK).send();
   }
 }
-
-

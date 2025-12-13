@@ -1,11 +1,12 @@
 import { IsString, IsOptional } from 'class-validator';
 
+/**
+ * Twilio WhatsApp webhook payload
+ * @see https://www.twilio.com/docs/messaging/guides/webhook-request
+ */
 export class TwilioWebhookDto {
   @IsString()
   MessageSid: string;
-
-  @IsString()
-  AccountSid: string;
 
   @IsString()
   From: string;
@@ -15,6 +16,10 @@ export class TwilioWebhookDto {
 
   @IsString()
   Body: string;
+
+  @IsOptional()
+  @IsString()
+  AccountSid?: string;
 
   @IsOptional()
   @IsString()
@@ -28,5 +33,3 @@ export class TwilioWebhookDto {
   @IsString()
   WaId?: string;
 }
-
-
