@@ -25,7 +25,7 @@ import { ConversationModule } from './conversation/conversation.module';
         database: configService.get<string>('DB_NAME', 'natal_bot'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: configService.get<string>('NODE_ENV') === 'development',
-        logging: configService.get<string>('NODE_ENV') === 'development',
+        logging: false,
       }),
     }),
     WhatsappModule,
