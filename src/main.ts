@@ -17,6 +17,16 @@ async function bootstrap() {
   );
 
   app.enableCors();
+  // todo: fix logging after start, because now its mess
+  // todo: add health check endpoint
+  // todo: fix verification of connection to database
+  // todo: fix verification of connection to openai
+  // todo: fix verification of connection to astrology api
+  // todo: fix verification of connection to twilio
+  // todo: research about infrastructure for product
+  // todo: fix store of history of client's conversations in database
+  // todo: fix store of history of client's natal charts in database
+  // todo: fix store of history of client's astrological readings in database
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', Number(process.env.PORT));
