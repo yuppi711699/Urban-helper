@@ -3,6 +3,7 @@ import { Twilio } from 'twilio';
 import { UserService } from '../user/user.service';
 import { ConversationService } from '../conversation/conversation.service';
 import { TwilioWebhookDto } from './dto/twilio-webhook.dto';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 
 @Injectable()
 export class WhatsappService implements OnApplicationBootstrap {
