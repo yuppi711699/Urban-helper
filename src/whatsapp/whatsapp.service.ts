@@ -1,4 +1,3 @@
-import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Twilio } from 'twilio';
 import { UserService } from '../user/user.service';
